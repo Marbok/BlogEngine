@@ -12,7 +12,11 @@
         <spring.version>5.2.9.RELEASE</spring.version>
         <spring.data.version>2.3.4.RELEASE</spring.data.version>
         <jetty.version>9.4.31.v20200723</jetty.version>
+        <jetty.jsp.version>9.2.30.v20200428</jetty.jsp.version>
         <hibernate.version>5.4.21.Final</hibernate.version>
+        <h2.version>1.4.200</h2.version>
+        <jackson.version>2.11.3</jackson.version>
+        <lombok.version>1.18.12</lombok.version>
     </properties>
 
 
@@ -53,6 +57,11 @@
             <artifactId>jetty-annotations</artifactId>
             <version>${jetty.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-jsp</artifactId>
+            <version>${jetty.jsp.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>org.hibernate</groupId>
@@ -62,13 +71,19 @@
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
-            <version>1.4.200</version>
+            <version>${h2.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>${jackson.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.12</version>
+            <version>${lombok.version}</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

@@ -4,18 +4,21 @@ import lombok.Data;
 
 import javax.persistence.*;
 
-@Entity
 @Data
+@Entity
+@Table(name = "ARTICLE")
 public class Article {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "Id")
+    @Column(name = "article_id")
     private long id;
 
-    @Column(name = "Title")
+    @ManyToOne
+    @JoinColumn(name = "topic_id")
+    private Topic topic;
+
     private String title;
 
-    @Column(name = "Description")
     private String description;
 }

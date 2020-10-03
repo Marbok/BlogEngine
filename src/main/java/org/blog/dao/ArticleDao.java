@@ -1,12 +1,9 @@
 package org.blog.dao;
 
 import org.blog.model.Article;
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-
-public interface ArticleDao {
-
-    void addArticle(Article article);
-    void addArticles(List<Article> articles);
-    List<Article> getArticles();
+@Transactional
+public interface ArticleDao extends CrudRepository<Article, Long> {
 }
