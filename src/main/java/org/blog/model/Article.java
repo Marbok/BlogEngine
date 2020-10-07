@@ -21,4 +21,6 @@ public class Article {
     private String title;
 
     private String description;
+
+    private String content;
 }

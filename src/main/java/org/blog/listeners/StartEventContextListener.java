@@ -33,7 +33,8 @@ public class StartEventContextListener implements ApplicationListener<ContextRef
             Article article = new Article()
                     .setTopic(topic)
                     .setTitle("java")
-                    .setDescription("java article");
+                    .setDescription("java article")
+                    .setContent("This article about Java language. I can write a lot of about it. And etc.");
 
             topicDao.saveAll(Arrays.asList(
                     topic,
