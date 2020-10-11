@@ -27,21 +27,38 @@ public class StartEventContextListener implements ApplicationListener<ContextRef
     @EventListener
     public void onApplicationEvent(ContextRefreshedEvent event) {
         if (isBDNotInitialization) {
-            Topic topic = new Topic()
-                    .setName("java");
+            Topic topicJava = new Topic().setName("java");
+            Topic topicPy = new Topic().setName("Python");
+            Topic topicC = new Topic().setName("C++");
 
-            Article article = new Article()
-                    .setTopic(topic)
+            Article articleJava = new Article()
+                    .setTopic(topicJava)
                     .setTitle("java")
                     .setDescription("java article")
                     .setContent("This article about Java language. I can write a lot of about it. And etc.");
 
+            Article articlePython = new Article()
+                    .setTopic(topicPy)
+                    .setTitle("Python")
+                    .setDescription("Python article")
+                    .setContent("This article about Python language. I can write a lot of about it. And etc.");
+
+            Article articleC = new Article()
+                    .setTopic(topicC)
+                    .setTitle("C++")
+                    .setDescription("C++ article")
+                    .setContent("This article about C++ language. I can write a lot of about it. And etc.");
+
             topicDao.saveAll(Arrays.asList(
-                    topic,
-                    new Topic().setName("Python"),
-                    new Topic().setName("C++")
+                    topicJava,
+                    topicPy,
+                    topicC
             ));
-            articleDao.save(article);
+            articleDao.saveAll(Arrays.asList(
+                    articleJava,
+                    articleC,
+                    articlePython
+            ));
             isBDNotInitialization = false;
         }
     }
