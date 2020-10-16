@@ -4,114 +4,78 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.3.4.RELEASE</version>
+        <relativePath/>
+    </parent>
+
     <groupId>org.example</groupId>
     <artifactId>Blog</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <properties>
-        <spring.version>5.2.9.RELEASE</spring.version>
-        <spring.data.version>2.3.4.RELEASE</spring.data.version>
-        <jetty.version>9.4.31.v20200723</jetty.version>
-        <jetty.jsp.version>9.2.30.v20200428</jetty.jsp.version>
-        <hibernate.version>5.4.21.Final</hibernate.version>
-        <h2.version>1.4.200</h2.version>
-        <jackson.version>2.11.3</jackson.version>
         <lombok.version>1.18.12</lombok.version>
         <mapstruct.version>1.4.0.Final</mapstruct.version>
+        <java.version>11</java.version>
     </properties>
-
 
     <dependencies>
         <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-context</artifactId>
-            <version>${spring.version}</version>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.springframework.boot</groupId>-->
+<!--            <artifactId>spring-boot-starter-security</artifactId>-->
+<!--        </dependency>-->
         <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-orm</artifactId>
-            <version>${spring.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-webmvc</artifactId>
-            <version>${spring.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.data</groupId>
-            <artifactId>spring-data-jpa</artifactId>
-            <version>${spring.data.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.eclipse.jetty</groupId>
-            <artifactId>jetty-server</artifactId>
-            <version>${jetty.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.jetty</groupId>
-            <artifactId>jetty-webapp</artifactId>
-            <version>${jetty.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.jetty</groupId>
-            <artifactId>jetty-annotations</artifactId>
-            <version>${jetty.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.jetty</groupId>
-            <artifactId>jetty-jsp</artifactId>
-            <version>${jetty.jsp.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-core</artifactId>
-            <version>${hibernate.version}</version>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
-            <version>${h2.version}</version>
+            <scope>runtime</scope>
         </dependency>
-
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-            <version>${jackson.version}</version>
-        </dependency>
-
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>${lombok.version}</version>
-            <scope>provided</scope>
+            <optional>true</optional>
         </dependency>
-
         <dependency>
             <groupId>org.mapstruct</groupId>
             <artifactId>mapstruct</artifactId>
             <version>${mapstruct.version}</version>
         </dependency>
-
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.junit.vintage</groupId>
+                    <artifactId>junit-vintage-engine</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-test</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
-        <resources>
-            <resource>
-                <directory>src/main/webapp</directory>
-            </resource>
-            <resource>
-                <directory>${basedir}/src/main/webapp/resources/properties</directory>
-                <includes>
-                    <include>app.properties</include>
-                </includes>
-                <targetPath>..</targetPath>
-            </resource>
-        </resources>
         <finalName>blog</finalName>
         <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -133,39 +97,160 @@
                     </annotationProcessorPaths>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>copy-dependencies</id>
-                        <phase>prepare-package</phase>
-                        <goals>
-                            <goal>copy-dependencies</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>${project.build.directory}/lib</outputDirectory>
-                            <overWriteReleases>false</overWriteReleases>
-                            <overWriteSnapshots>false</overWriteSnapshots>
-                            <overWriteIfNewer>true</overWriteIfNewer>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <configuration>
-                    <archive>
-                        <manifest>
-                            <addClasspath>true</addClasspath>
-                            <classpathPrefix>lib/</classpathPrefix>
-                            <mainClass>org.blog.Main</mainClass>
-                        </manifest>
-                    </archive>
-                </configuration>
-            </plugin>
         </plugins>
     </build>
+
+    <!--    <dependencies>-->
+    <!--        <dependency>-->
+    <!--            <groupId>org.springframework</groupId>-->
+    <!--            <artifactId>spring-context</artifactId>-->
+    <!--            <version>${spring.version}</version>-->
+    <!--        </dependency>-->
+    <!--        <dependency>-->
+    <!--            <groupId>org.springframework</groupId>-->
+    <!--            <artifactId>spring-orm</artifactId>-->
+    <!--            <version>${spring.version}</version>-->
+    <!--        </dependency>-->
+    <!--        <dependency>-->
+    <!--            <groupId>org.springframework</groupId>-->
+    <!--            <artifactId>spring-webmvc</artifactId>-->
+    <!--            <version>${spring.version}</version>-->
+    <!--        </dependency>-->
+    <!--        <dependency>-->
+    <!--            <groupId>org.springframework.data</groupId>-->
+    <!--            <artifactId>spring-data-jpa</artifactId>-->
+    <!--            <version>${spring.data.version}</version>-->
+    <!--        </dependency>-->
+
+    <!--        <dependency>-->
+    <!--            <groupId>org.eclipse.jetty</groupId>-->
+    <!--            <artifactId>jetty-server</artifactId>-->
+    <!--            <version>${jetty.version}</version>-->
+    <!--        </dependency>-->
+    <!--        <dependency>-->
+    <!--            <groupId>org.eclipse.jetty</groupId>-->
+    <!--            <artifactId>jetty-webapp</artifactId>-->
+    <!--            <version>${jetty.version}</version>-->
+    <!--        </dependency>-->
+    <!--        <dependency>-->
+    <!--            <groupId>org.eclipse.jetty</groupId>-->
+    <!--            <artifactId>jetty-annotations</artifactId>-->
+    <!--            <version>${jetty.version}</version>-->
+    <!--        </dependency>-->
+    <!--        <dependency>-->
+    <!--            <groupId>org.eclipse.jetty</groupId>-->
+    <!--            <artifactId>jetty-jsp</artifactId>-->
+    <!--            <version>${jetty.jsp.version}</version>-->
+    <!--        </dependency>-->
+
+    <!--        <dependency>-->
+    <!--            <groupId>org.hibernate</groupId>-->
+    <!--            <artifactId>hibernate-core</artifactId>-->
+    <!--            <version>${hibernate.version}</version>-->
+    <!--        </dependency>-->
+    <!--        <dependency>-->
+    <!--            <groupId>com.h2database</groupId>-->
+    <!--            <artifactId>h2</artifactId>-->
+    <!--            <version>${h2.version}</version>-->
+    <!--        </dependency>-->
+
+    <!--        <dependency>-->
+    <!--            <groupId>com.fasterxml.jackson.core</groupId>-->
+    <!--            <artifactId>jackson-databind</artifactId>-->
+    <!--            <version>${jackson.version}</version>-->
+    <!--        </dependency>-->
+
+    <!--        <dependency>-->
+    <!--            <groupId>org.projectlombok</groupId>-->
+    <!--            <artifactId>lombok</artifactId>-->
+    <!--            <version>${lombok.version}</version>-->
+    <!--            <scope>provided</scope>-->
+    <!--        </dependency>-->
+
+    <!--        <dependency>-->
+    <!--            <groupId>org.mapstruct</groupId>-->
+    <!--            <artifactId>mapstruct</artifactId>-->
+    <!--            <version>${mapstruct.version}</version>-->
+    <!--        </dependency>-->
+
+    <!--        <dependency>-->
+    <!--            <groupId>junit</groupId>-->
+    <!--            <artifactId>junit</artifactId>-->
+    <!--            <version>4.13.1</version>-->
+    <!--            <scope>test</scope>-->
+    <!--        </dependency>-->
+
+    <!--    </dependencies>-->
+
+    <!--    <build>-->
+    <!--        <resources>-->
+    <!--            <resource>-->
+    <!--                <directory>src/main/webapp</directory>-->
+    <!--            </resource>-->
+    <!--            <resource>-->
+    <!--                <directory>${basedir}/src/main/webapp/resources/properties</directory>-->
+    <!--                <includes>-->
+    <!--                    <include>app.properties</include>-->
+    <!--                </includes>-->
+    <!--                <targetPath>..</targetPath>-->
+    <!--            </resource>-->
+    <!--        </resources>-->
+    <!--        <finalName>blog</finalName>-->
+    <!--        <plugins>-->
+    <!--            <plugin>-->
+    <!--                <groupId>org.apache.maven.plugins</groupId>-->
+    <!--                <artifactId>maven-compiler-plugin</artifactId>-->
+    <!--                <version>3.8.1</version>-->
+    <!--                <configuration>-->
+    <!--                    <source>8</source>-->
+    <!--                    <target>8</target>-->
+    <!--                    <annotationProcessorPaths>-->
+    <!--                        <path>-->
+    <!--                            <groupId>org.mapstruct</groupId>-->
+    <!--                            <artifactId>mapstruct-processor</artifactId>-->
+    <!--                            <version>${mapstruct.version}</version>-->
+    <!--                        </path>-->
+    <!--                        <path>-->
+    <!--                            <groupId>org.projectlombok</groupId>-->
+    <!--                            <artifactId>lombok</artifactId>-->
+    <!--                            <version>${lombok.version}</version>-->
+    <!--                        </path>-->
+    <!--                    </annotationProcessorPaths>-->
+    <!--                </configuration>-->
+    <!--            </plugin>-->
+    <!--            <plugin>-->
+    <!--                <groupId>org.apache.maven.plugins</groupId>-->
+    <!--                <artifactId>maven-dependency-plugin</artifactId>-->
+    <!--                <executions>-->
+    <!--                    <execution>-->
+    <!--                        <id>copy-dependencies</id>-->
+    <!--                        <phase>prepare-package</phase>-->
+    <!--                        <goals>-->
+    <!--                            <goal>copy-dependencies</goal>-->
+    <!--                        </goals>-->
+    <!--                        <configuration>-->
+    <!--                            <outputDirectory>${project.build.directory}/lib</outputDirectory>-->
+    <!--                            <overWriteReleases>false</overWriteReleases>-->
+    <!--                            <overWriteSnapshots>false</overWriteSnapshots>-->
+    <!--                            <overWriteIfNewer>true</overWriteIfNewer>-->
+    <!--                        </configuration>-->
+    <!--                    </execution>-->
+    <!--                </executions>-->
+    <!--            </plugin>-->
+    <!--            <plugin>-->
+    <!--                <groupId>org.apache.maven.plugins</groupId>-->
+    <!--                <artifactId>maven-jar-plugin</artifactId>-->
+    <!--                <configuration>-->
+    <!--                    <archive>-->
+    <!--                        <manifest>-->
+    <!--                            <addClasspath>true</addClasspath>-->
+    <!--                            <classpathPrefix>lib/</classpathPrefix>-->
+    <!--                            <mainClass>org.blog.Main</mainClass>-->
+    <!--                        </manifest>-->
+    <!--                    </archive>-->
+    <!--                </configuration>-->
+    <!--            </plugin>-->
+    <!--        </plugins>-->
+    <!--    </build>-->
 
 </project>

@@ -1,7 +1,5 @@
 package org.blog.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.blog.controller.dto.ArticleResponse;
 import org.blog.controller.mapper.ArticleModelToResponseMapper;
 import org.blog.dao.ArticleDao;
@@ -31,22 +29,21 @@ public class ArticleController {
     }
 
     @GetMapping("/articles/{topicId}")
-    public String getArticles(@PathVariable Long topicId) throws JsonProcessingException {
-        Map<Long, String> articleNames = topicDao.findById(topicId)
+    public Map<Long, String> getArticles(@PathVariable Long topicId) {
+        return topicDao.findById(topicId)
                 .map(topic -> articleDao.findAllByTopic(topic))
                 .map(articles -> articles.stream()
                         .collect(Collectors.toMap(Article::getId, Article::getTitle)))
                 .orElse(new HashMap<>());
-        ObjectMapper mapper = new ObjectMapper();
-        return mapper.writeValueAsString(articleNames);
     }
 
     @GetMapping("/article/{articleId}")
-    public String getArticleById(@PathVariable Long articleId) throws JsonProcessingException {
+    public ArticleResponse getArticleById(@PathVariable Long articleId) {
         Article article = articleDao.findById(articleId)
-                .orElseThrow(RuntimeException::new);
-        ArticleResponse articleResponse = articleMapper.modelToResponse(article);
-        ObjectMapper mapper = new ObjectMapper();
-        return mapper.writeValueAsString(articleResponse);
+                .orElse(new Article()
+                        .setTitle("Article not founded!!!")
+                        .setDescription("")
+                        .setContent(""));
+        return articleMapper.modelToResponse(article);
     }
 }

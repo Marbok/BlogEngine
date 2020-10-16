@@ -1,7 +1,5 @@
 package org.blog.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.blog.dao.TopicDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,12 +14,11 @@ public class TopicController {
     @Autowired
     private TopicDao topicDao;
 
-    @GetMapping("/getTopics")
-    public String getTopics() throws JsonProcessingException {
+    @GetMapping("/topics")
+    public Map<Long, String> getTopics() {
         Map<Long, String> topicNames = new HashMap<>();
         topicDao.findAll()
                 .forEach(article -> topicNames.put(article.getId(), article.getName()));
-        ObjectMapper mapper = new ObjectMapper();
-        return mapper.writeValueAsString(topicNames);
+        return topicNames;
     }
 }
