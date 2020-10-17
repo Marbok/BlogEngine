@@ -1,6 +1,8 @@
 package org.blog;
 
+import org.blog.model.Author;
 import org.blog.repository.ArticleRepository;
+import org.blog.repository.AuthorRepository;
 import org.blog.repository.TopicRepository;
 import org.blog.model.Article;
 import org.blog.model.Topic;
@@ -18,8 +20,16 @@ public class Main {
     }
 
     @Bean
-    public CommandLineRunner initDataBase(ArticleRepository articleRepository, TopicRepository topicRepository) {
+    public CommandLineRunner initDataBase(ArticleRepository articleRepository,
+                                          TopicRepository topicRepository,
+                                          AuthorRepository authorRepository) {
         return (args) -> {
+            Author author = new Author()
+                    .setNickname("test")
+                    .setPassword("$2a$10$Dx.D7a240ySvk9.K9i0wJOKUboNdZzh9aK6NOKkvXRxYS3AjELZpe");//test
+
+            authorRepository.save(author);
+
             Topic topicJava = new Topic().setName("java");
             Topic topicPy = new Topic().setName("Python");
             Topic topicC = new Topic().setName("C++");
