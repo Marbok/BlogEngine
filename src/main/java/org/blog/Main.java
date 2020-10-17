@@ -1,7 +1,7 @@
 package org.blog;
 
-import org.blog.dao.ArticleDao;
-import org.blog.dao.TopicDao;
+import org.blog.repository.ArticleRepository;
+import org.blog.repository.TopicRepository;
 import org.blog.model.Article;
 import org.blog.model.Topic;
 import org.springframework.boot.CommandLineRunner;
@@ -18,7 +18,7 @@ public class Main {
     }
 
     @Bean
-    public CommandLineRunner initDataBase(ArticleDao articleDao, TopicDao topicDao) {
+    public CommandLineRunner initDataBase(ArticleRepository articleRepository, TopicRepository topicRepository) {
         return (args) -> {
             Topic topicJava = new Topic().setName("java");
             Topic topicPy = new Topic().setName("Python");
@@ -42,12 +42,12 @@ public class Main {
                     .setDescription("C++ article")
                     .setContent("This article about C++ language. I can write a lot of about it. And etc.");
 
-            topicDao.saveAll(Arrays.asList(
+            topicRepository.saveAll(Arrays.asList(
                     topicJava,
                     topicPy,
                     topicC
             ));
-            articleDao.saveAll(Arrays.asList(
+            articleRepository.saveAll(Arrays.asList(
                     articleJava,
                     articleC,
                     articlePython

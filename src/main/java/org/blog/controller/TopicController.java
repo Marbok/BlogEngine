@@ -1,24 +1,30 @@
 package org.blog.controller;
 
-import org.blog.dao.TopicDao;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.blog.controller.mapper.TopicMapper;
+import org.blog.controller.response.TopicsResponse;
+import org.blog.services.api.TopicService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 public class TopicController {
 
-    @Autowired
-    private TopicDao topicDao;
+    private final TopicService topicService;
+    private final TopicMapper topicMapper;
+
+    public TopicController(TopicService topicService, TopicMapper topicMapper) {
+        this.topicService = topicService;
+        this.topicMapper = topicMapper;
+    }
 
     @GetMapping("/topics")
-    public Map<Long, String> getTopics() {
-        Map<Long, String> topicNames = new HashMap<>();
-        topicDao.findAll()
-                .forEach(article -> topicNames.put(article.getId(), article.getName()));
-        return topicNames;
+    public List<TopicsResponse> getTopics() {
+        return topicService.findAllTopics()
+                .stream()
+                .map(topicMapper::modelToTopicsResponse)
+                .collect(Collectors.toList());
     }
 }
