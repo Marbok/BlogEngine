@@ -1,6 +1,6 @@
 package org.blog.controller.mapper;
 
-import org.blog.controller.response.TopicsResponse;
+import org.blog.controller.dto.topic.TopicsResponse;
 import org.blog.model.Topic;
 import org.mapstruct.Mapper;
 

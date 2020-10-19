@@ -1,4 +1,4 @@
-package org.blog.controller.response;
+package org.blog.controller.dto.topic;
 
 import lombok.Data;
 

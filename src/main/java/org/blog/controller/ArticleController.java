@@ -1,8 +1,8 @@
 package org.blog.controller;
 
 import org.blog.controller.mapper.ArticleMapper;
-import org.blog.controller.response.ArticleResponse;
-import org.blog.controller.response.ArticlesResponse;
+import org.blog.controller.dto.article.ArticleResponse;
+import org.blog.controller.dto.article.ArticlesResponse;
 import org.blog.exceptions.NotFoundException;
 import org.blog.model.Article;
 import org.blog.services.api.ArticleService;
@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
+//@CrossOrigin
 public class ArticleController {
 
     private final ArticleService articleService;

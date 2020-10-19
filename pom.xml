@@ -19,6 +19,7 @@
     <properties>
         <lombok.version>1.18.12</lombok.version>
         <mapstruct.version>1.4.0.Final</mapstruct.version>
+        <jjwt.version>0.9.1</jjwt.version>
         <java.version>11</java.version>
     </properties>
 
@@ -50,6 +51,11 @@
             <groupId>org.mapstruct</groupId>
             <artifactId>mapstruct</artifactId>
             <version>${mapstruct.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt</artifactId>
+            <version>${jjwt.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>

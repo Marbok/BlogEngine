@@ -1,7 +1,7 @@
 package org.blog.controller;
 
 import org.blog.controller.mapper.TopicMapper;
-import org.blog.controller.response.TopicsResponse;
+import org.blog.controller.dto.topic.TopicsResponse;
 import org.blog.services.api.TopicService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
