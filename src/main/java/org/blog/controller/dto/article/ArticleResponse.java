@@ -7,9 +7,8 @@ import java.io.Serializable;
 @Data
 public class ArticleResponse implements Serializable {
 
+    private String author;
     private String title;
-
     private String description;
-
     private String content;
 }

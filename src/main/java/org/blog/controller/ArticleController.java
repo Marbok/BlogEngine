@@ -6,6 +6,7 @@ import org.blog.controller.dto.article.ArticlesResponse;
 import org.blog.exceptions.NotFoundException;
 import org.blog.model.Article;
 import org.blog.services.api.ArticleService;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,7 +16,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-//@CrossOrigin
+@CrossOrigin
 public class ArticleController {
 
     private final ArticleService articleService;

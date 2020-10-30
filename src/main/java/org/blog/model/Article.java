@@ -19,8 +19,10 @@ public class Article {
     private Topic topic;
 
     private String title;
-
     private String description;
-
     private String content;
+
+    @ManyToOne
+    @JoinColumn(name = "author_id")
+    private Author author;
 }

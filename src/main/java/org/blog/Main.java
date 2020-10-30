@@ -36,18 +36,21 @@ public class Main {
 
             Article articleJava = new Article()
                     .setTopic(topicJava)
+                    .setAuthor(author)
                     .setTitle("java")
                     .setDescription("java article")
                     .setContent("This article about Java language. I can write a lot of about it. And etc.");
 
             Article articlePython = new Article()
                     .setTopic(topicPy)
+                    .setAuthor(author)
                     .setTitle("Python")
                     .setDescription("Python article")
                     .setContent("This article about Python language. I can write a lot of about it. And etc.");
 
             Article articleC = new Article()
                     .setTopic(topicC)
+                    .setAuthor(author)
                     .setTitle("C++")
                     .setDescription("C++ article")
                     .setContent("This article about C++ language. I can write a lot of about it. And etc.");
