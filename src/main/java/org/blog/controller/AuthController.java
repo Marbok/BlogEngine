@@ -3,6 +3,7 @@ package org.blog.controller;
 import org.blog.config.jwt.JwtProvider;
 import org.blog.controller.dto.auth.TokenRequest;
 import org.blog.controller.dto.auth.TokenResponse;
+import org.blog.model.Author;
 import org.blog.services.api.AuthorService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
@@ -26,12 +27,21 @@ public class AuthController {
     }
 
     @PostMapping("/token")
-    public TokenResponse token(@RequestBody TokenRequest tokenRequest) {
-        return authorService.findByNicknameAndPassword(tokenRequest.getNickname(), tokenRequest.getPassword())
+    public TokenResponse token(@RequestBody Author authorData) {
+        return authorService.findByNicknameAndPassword(authorData.getNickname(), authorData.getPassword())
                 .map(author -> jwtProvider.generateToken(author.getNickname()))
                 .map(token -> new TokenResponse()
                         .setToken(token))
-                .orElseThrow(() -> new UsernameNotFoundException("user " + tokenRequest.getNickname() + " not founded"));
+                .orElseThrow(() -> new UsernameNotFoundException("user " + authorData.getNickname() + " not founded"));
+    }
+
+    @PostMapping("/registration")
+    public TokenResponse registration(@RequestBody Author author) {
+        Author saveAuthor = authorService.addNewAuthor(author);
+        String token = jwtProvider.generateToken(saveAuthor.getNickname());
+        return new TokenResponse()
+                .setToken(token);
+
     }
 
 

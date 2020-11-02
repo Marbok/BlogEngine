@@ -18,4 +18,9 @@ public class RestExceptionHandler {
     public ResponseEntity<HttpStatus> handleUserNameNotFoundException() {
         return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
+
+    @ExceptionHandler(IncorrectNicknameException.class)
+    public ResponseEntity<HttpStatus> handleIncorrectNicknameException() {
+        return new ResponseEntity<>(HttpStatus.CONFLICT);
+    }
 }

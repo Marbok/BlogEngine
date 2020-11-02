@@ -1,5 +1,6 @@
 package org.blog.services;
 
+import org.blog.exceptions.IncorrectNicknameException;
 import org.blog.model.Author;
 import org.blog.repository.AuthorRepository;
 import org.blog.services.api.AuthorService;
@@ -43,5 +44,16 @@ public class AuthorServiceImpl implements AuthorService {
     public Optional<Author> findByNicknameAndPassword(String nickname, String password) {
         return findByNickname(nickname)
                 .filter(author -> passwordEncoder.matches(password, author.getPassword()));
+    }
+
+    @Override
+    public Author addNewAuthor(Author author) throws IncorrectNicknameException {
+        Optional<Author> byNickname = authorRepository.findByNickname(author.getNickname());
+        if (byNickname.isPresent()) {
+            throw new IncorrectNicknameException();
+        }
+        String encodePassword = passwordEncoder.encode(author.getPassword());
+        author.setPassword(encodePassword);
+        return authorRepository.save(author);
     }
 }

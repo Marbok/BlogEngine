@@ -23,6 +23,6 @@ public class Article {
     private String content;
 
     @ManyToOne
-    @JoinColumn(name = "author_id")
+    @JoinColumn(name = "nickname")
     private Author author;
 }

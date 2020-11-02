@@ -1,5 +1,6 @@
 package org.blog.services.api;
 
+import org.blog.exceptions.IncorrectNicknameException;
 import org.blog.model.Author;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
@@ -19,4 +20,11 @@ public interface AuthorService extends UserDetailsService {
      * @return information about author
      */
     Optional<Author> findByNicknameAndPassword(String nickname, String password);
+
+    /**
+     * @param author
+     * @return consumer author
+     * @throws IncorrectNicknameException if author exists
+     */
+    Author addNewAuthor(Author author) throws IncorrectNicknameException;
 }
