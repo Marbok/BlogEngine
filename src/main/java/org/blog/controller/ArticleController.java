@@ -1,15 +1,15 @@
 package org.blog.controller;
 
-import org.blog.controller.mapper.ArticleMapper;
+import org.blog.annotation.CurrentAuthor;
 import org.blog.controller.dto.article.ArticleResponse;
 import org.blog.controller.dto.article.ArticlesResponse;
+import org.blog.controller.mapper.ArticleMapper;
 import org.blog.exceptions.NotFoundException;
 import org.blog.model.Article;
+import org.blog.model.Author;
 import org.blog.services.api.ArticleService;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
 import java.util.List;
@@ -43,5 +43,13 @@ public class ArticleController {
         return articleService.findArticleById(articleId)
                 .map(articleMapper::modelToArticleResponse)
                 .orElseThrow(NotFoundException::new);
+    }
+
+    @PostMapping("/article/create")
+    public HttpStatus createNewArticle(@RequestBody Article article,
+                                       @CurrentAuthor Author author) {
+        article.setAuthor(author);
+        articleService.saveNewArticle(article);
+        return HttpStatus.CREATED;
     }
 }

@@ -19,7 +19,7 @@ public class RestExceptionHandler {
         return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
 
-    @ExceptionHandler(IncorrectNicknameException.class)
+    @ExceptionHandler({IncorrectNicknameException.class, ArticleExistsException.class})
     public ResponseEntity<HttpStatus> handleIncorrectNicknameException() {
         return new ResponseEntity<>(HttpStatus.CONFLICT);
     }

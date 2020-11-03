@@ -1,5 +1,7 @@
 package org.blog.services;
 
+import lombok.AllArgsConstructor;
+import org.blog.exceptions.ArticleExistsException;
 import org.blog.model.Article;
 import org.blog.repository.ArticleRepository;
 import org.blog.services.api.ArticleService;
@@ -10,13 +12,10 @@ import java.util.Collections;
 import java.util.Optional;
 
 @Component
+@AllArgsConstructor
 public class ArticleServiceImpl implements ArticleService {
 
     private final ArticleRepository articleRepository;
-
-    public ArticleServiceImpl(ArticleRepository articleRepository) {
-        this.articleRepository = articleRepository;
-    }
 
     @Override
     public Collection<Article> findArticlesByTopic(Long topicId) {
@@ -33,4 +32,15 @@ public class ArticleServiceImpl implements ArticleService {
         }
         return articleRepository.findById(articleId);
     }
+
+    @Override
+    public void saveNewArticle(Article article) {
+        Optional<Article> byTitle = articleRepository.findByTitle(article.getTitle());
+        if (byTitle.isPresent()) {
+            throw new ArticleExistsException();
+        }
+        articleRepository.save(article);
+    }
+
+
 }

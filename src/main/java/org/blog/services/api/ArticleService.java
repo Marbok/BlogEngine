@@ -21,4 +21,11 @@ public interface ArticleService {
      * @return find article by id, article id equals null - return Optional.empty()
      */
     Optional<Article> findArticleById(Long articleId);
+
+    /**
+     * Add new article
+     *
+     * @param article article
+     */
+    void saveNewArticle(Article article);
 }

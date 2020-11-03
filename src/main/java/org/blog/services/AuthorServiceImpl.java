@@ -2,10 +2,10 @@ package org.blog.services;
 
 import org.blog.exceptions.IncorrectNicknameException;
 import org.blog.model.Author;
+import org.blog.model.AuthorDetails;
 import org.blog.repository.AuthorRepository;
 import org.blog.services.api.AuthorService;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -32,7 +32,7 @@ public class AuthorServiceImpl implements AuthorService {
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
         List<SimpleGrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority("USER"));
 
-        return new User(author.getNickname(), author.getPassword(), authorities);
+        return new AuthorDetails(author, authorities);
     }
 
     @Override

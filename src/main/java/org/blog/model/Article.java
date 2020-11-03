@@ -18,6 +18,7 @@ public class Article {
     @JoinColumn(name = "topic_id")
     private Topic topic;
 
+    @Column(unique = true)
     private String title;
     private String description;
     private String content;
