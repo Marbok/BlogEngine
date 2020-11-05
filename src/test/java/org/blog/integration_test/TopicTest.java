@@ -23,7 +23,7 @@ public class TopicTest {
     @Test
     @Sql(value = {"/create-topic.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     public void shouldReturnDefaultMessage() throws Exception {
-        this.mockMvc.perform(get("/topics"))
+        mockMvc.perform(get("/topics"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("[{\"id\":1,\"name\":\"java\"},{\"id\":2,\"name\":\"python\"}]")));

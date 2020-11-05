@@ -1,29 +1,29 @@
 package org.blog.controller;
 
+import lombok.AllArgsConstructor;
 import org.blog.config.jwt.JwtProvider;
-import org.blog.controller.dto.auth.TokenRequest;
 import org.blog.controller.dto.auth.TokenResponse;
 import org.blog.model.Author;
 import org.blog.services.api.AuthorService;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @CrossOrigin
+@AllArgsConstructor
 @RequestMapping("/auth")
 public class AuthController {
 
     private final AuthorService authorService;
     private final JwtProvider jwtProvider;
 
-    public AuthController(AuthorService authorService, JwtProvider jwtProvider) {
-        this.authorService = authorService;
-        this.jwtProvider = jwtProvider;
-    }
-
-    @GetMapping("/check") // todo delete - only for local test
-    public String check() {
-        return "OK";
+    /**
+     * @return status 200 - if token correct
+     */
+    @GetMapping("/check")
+    public HttpStatus check() {
+        return HttpStatus.OK;
     }
 
     @PostMapping("/token")

@@ -1,5 +1,6 @@
 package org.blog.controller;
 
+import lombok.AllArgsConstructor;
 import org.blog.annotation.CurrentAuthor;
 import org.blog.controller.dto.article.ArticleResponse;
 import org.blog.controller.dto.article.ArticlesResponse;
@@ -17,15 +18,11 @@ import java.util.stream.Collectors;
 
 @RestController
 @CrossOrigin
+@AllArgsConstructor
 public class ArticleController {
 
     private final ArticleService articleService;
     private final ArticleMapper articleMapper;
-
-    public ArticleController(ArticleService articleService, ArticleMapper articleMapper) {
-        this.articleService = articleService;
-        this.articleMapper = articleMapper;
-    }
 
     @GetMapping("/articles/{topicId}")
     public List<ArticlesResponse> getArticles(@PathVariable Long topicId) {
