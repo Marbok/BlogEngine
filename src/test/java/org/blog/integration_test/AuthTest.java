@@ -20,14 +20,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-// todo refactoring
+@Sql(value = {"/add-new-author.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+@Sql(value = {"/delete-user.sql"}, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 public class AuthTest {
 
     @Autowired
     private MockMvc mockMvc;
 
     @Test
-    @Sql(value = {"/delete-user.sql"}, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     public void registration_success() throws Exception {
         String tokenResponse = mockMvc.perform(post("/auth/registration")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -40,17 +40,10 @@ public class AuthTest {
                 .getResponse()
                 .getContentAsString();
 
-        TokenResponse token = deserialize(tokenResponse, TokenResponse.class);
-
-        mockMvc.perform(get("/auth/check")
-                .header(AUTHORIZATION, "Bearer " + token.getToken()))
-                .andDo(print())
-                .andExpect(status().isOk());
+        checkToken(deserialize(tokenResponse, TokenResponse.class));
     }
 
     @Test
-    @Sql(value = {"/add-new-author.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    @Sql(value = {"/delete-user.sql"}, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     public void registration_fail() throws Exception {
         mockMvc.perform(post("/auth/registration")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -62,8 +55,6 @@ public class AuthTest {
     }
 
     @Test
-    @Sql(value = {"/add-new-author.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    @Sql(value = {"/delete-user.sql"}, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     public void token_fail() throws Exception {
         mockMvc.perform(post("/auth/token")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -75,8 +66,6 @@ public class AuthTest {
     }
 
     @Test
-    @Sql(value = {"/add-new-author.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    @Sql(value = {"/delete-user.sql"}, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     public void token_success() throws Exception {
         String tokenResponse = mockMvc.perform(post("/auth/token")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -89,8 +78,10 @@ public class AuthTest {
                 .getResponse()
                 .getContentAsString();
 
-        TokenResponse token = deserialize(tokenResponse, TokenResponse.class);
+        checkToken(deserialize(tokenResponse, TokenResponse.class));
+    }
 
+    private void checkToken(TokenResponse token) throws Exception {
         mockMvc.perform(get("/auth/check")
                 .header(AUTHORIZATION, "Bearer " + token.getToken()))
                 .andDo(print())

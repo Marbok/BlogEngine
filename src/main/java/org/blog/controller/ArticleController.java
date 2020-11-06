@@ -2,6 +2,7 @@ package org.blog.controller;
 
 import lombok.AllArgsConstructor;
 import org.blog.annotation.CurrentAuthor;
+import org.blog.controller.dto.article.ArticleCreateResponse;
 import org.blog.controller.dto.article.ArticleResponse;
 import org.blog.controller.dto.article.ArticlesResponse;
 import org.blog.controller.mapper.ArticleMapper;
@@ -10,6 +11,7 @@ import org.blog.model.Article;
 import org.blog.model.Author;
 import org.blog.services.api.ArticleService;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
@@ -43,10 +45,11 @@ public class ArticleController {
     }
 
     @PostMapping("/article/create")
-    public HttpStatus createNewArticle(@RequestBody Article article,
-                                       @CurrentAuthor Author author) {
+    public ResponseEntity<ArticleCreateResponse> createNewArticle(@RequestBody Article article,
+                                                                  @CurrentAuthor Author author) {
         article.setAuthor(author);
-        articleService.saveNewArticle(article);
-        return HttpStatus.CREATED;
+        Long articleId = articleService.saveNewArticle(article).getId();
+        ArticleCreateResponse body = new ArticleCreateResponse().setArticleId(String.valueOf(articleId));
+        return new ResponseEntity<>(body, HttpStatus.CREATED);
     }
 }

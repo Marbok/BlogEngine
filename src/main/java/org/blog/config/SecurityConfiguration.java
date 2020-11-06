@@ -24,7 +24,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and().httpBasic().disable()
                 .csrf().disable()
                 .authorizeRequests().antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                .antMatchers(HttpMethod.GET, "/auth/check").authenticated() // todo delete - only for local test
+                .antMatchers(HttpMethod.GET, "/auth/check").authenticated()
+                .antMatchers(HttpMethod.POST, "/article/create").authenticated()
                 .and().sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);

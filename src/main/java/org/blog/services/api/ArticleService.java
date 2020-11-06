@@ -1,6 +1,7 @@
 package org.blog.services.api;
 
 import org.blog.model.Article;
+import org.blog.model.Author;
 
 import java.util.Collection;
 import java.util.Optional;
@@ -26,6 +27,7 @@ public interface ArticleService {
      * Add new article
      *
      * @param article article
+     * @return  saved article
      */
-    void saveNewArticle(Article article);
+    Article saveNewArticle(Article article);
 }

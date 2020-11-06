@@ -22,6 +22,7 @@ public class TopicTest {
 
     @Test
     @Sql(value = {"/create-topic.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(value = {"/delete-topic.sql"}, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     public void shouldReturnDefaultMessage() throws Exception {
         mockMvc.perform(get("/topics"))
                 .andDo(print())

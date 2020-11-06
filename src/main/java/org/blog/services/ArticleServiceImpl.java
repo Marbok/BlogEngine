@@ -3,6 +3,7 @@ package org.blog.services;
 import lombok.AllArgsConstructor;
 import org.blog.exceptions.ArticleExistsException;
 import org.blog.model.Article;
+import org.blog.model.Author;
 import org.blog.repository.ArticleRepository;
 import org.blog.services.api.ArticleService;
 import org.springframework.stereotype.Component;
@@ -34,12 +35,12 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public void saveNewArticle(Article article) {
+    public Article saveNewArticle(Article article) {
         Optional<Article> byTitle = articleRepository.findByTitle(article.getTitle());
         if (byTitle.isPresent()) {
             throw new ArticleExistsException();
         }
-        articleRepository.save(article);
+        return articleRepository.save(article);
     }
 
 
