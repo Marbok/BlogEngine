@@ -51,7 +51,7 @@ public class AuthTest {
                         .setNickname("test")
                         .setPassword("test"))))
                 .andDo(print())
-                .andExpect(status().is4xxClientError());
+                .andExpect(status().isConflict());
     }
 
     @Test
@@ -62,7 +62,7 @@ public class AuthTest {
                         .setNickname("Marbok")
                         .setPassword("12345"))))
                 .andDo(print())
-                .andExpect(status().is4xxClientError());
+                .andExpect(status().isForbidden());
     }
 
     @Test

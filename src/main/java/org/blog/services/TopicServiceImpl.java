@@ -6,6 +6,7 @@ import org.blog.services.api.TopicService;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
+import java.util.Optional;
 
 @Component
 public class TopicServiceImpl implements TopicService {
@@ -19,5 +20,10 @@ public class TopicServiceImpl implements TopicService {
     @Override
     public Collection<Topic> findAllTopics() {
         return (Collection<Topic>) topicRepository.findAll();
+    }
+
+    @Override
+    public Optional<Topic> findTopicById(long topicId) {
+        return topicRepository.findById(topicId);
     }
 }

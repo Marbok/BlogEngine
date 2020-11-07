@@ -30,7 +30,7 @@ public class ArticleTest {
     public void getArticles_fail() throws Exception {
         mockMvc.perform(get("/articles/10"))
                 .andDo(print())
-                .andExpect(status().is4xxClientError());
+                .andExpect(status().isNotFound());
     }
 
     @Test
@@ -53,7 +53,7 @@ public class ArticleTest {
     public void getArticle_fail() throws Exception {
         mockMvc.perform(get("/article/10"))
                 .andDo(print())
-                .andExpect(status().is4xxClientError());
+                .andExpect(status().isNotFound());
     }
 
     @Test
@@ -62,20 +62,19 @@ public class ArticleTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content("{\"title\":\"JVM\",\"description\":\"about JVM\",\"content\":\"JVM is very interesting\",\"topic\":\"1\"}"))
                 .andDo(print())
-                .andExpect(status().is4xxClientError());
+                .andExpect(status().isForbidden());
     }
 
     @Test
-    //todo fail test
     public void createArticle() throws Exception {
         String token = getToken(mockMvc, "marbok", "test");
 
         mockMvc.perform(post("/article/create")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .content("{\"title\":\"JVM\",\"description\":\"about JVM\",\"content\":\"JVM is very interesting\",\"topic\":\"1\"}")
+                .content("{\"title\":\"JVM\",\"description\":\"about JVM\",\"content\":\"JVM is very interesting\",\"topicId\":1}")
                 .header(JwtFilter.AUTHORIZATION, "Bearer " + token))
                 .andDo(print())
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andExpect(content().string(containsString("{\"articleId\":\"4\"}")));
     }
 

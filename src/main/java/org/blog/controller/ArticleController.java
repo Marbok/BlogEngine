@@ -2,14 +2,17 @@ package org.blog.controller;
 
 import lombok.AllArgsConstructor;
 import org.blog.annotation.CurrentAuthor;
+import org.blog.controller.dto.article.ArticleCreateRequest;
 import org.blog.controller.dto.article.ArticleCreateResponse;
 import org.blog.controller.dto.article.ArticleResponse;
 import org.blog.controller.dto.article.ArticlesResponse;
+import org.blog.controller.mapper.ArticleCreateRequestMapper;
 import org.blog.controller.mapper.ArticleMapper;
 import org.blog.exceptions.NotFoundException;
 import org.blog.model.Article;
 import org.blog.model.Author;
 import org.blog.services.api.ArticleService;
+import org.blog.services.api.TopicService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,6 +28,7 @@ public class ArticleController {
 
     private final ArticleService articleService;
     private final ArticleMapper articleMapper;
+    private final ArticleCreateRequestMapper articleCreateRequestMapper;
 
     @GetMapping("/articles/{topicId}")
     public List<ArticlesResponse> getArticles(@PathVariable Long topicId) {
@@ -45,8 +49,9 @@ public class ArticleController {
     }
 
     @PostMapping("/article/create")
-    public ResponseEntity<ArticleCreateResponse> createNewArticle(@RequestBody Article article,
+    public ResponseEntity<ArticleCreateResponse> createNewArticle(@RequestBody ArticleCreateRequest articleRequest,
                                                                   @CurrentAuthor Author author) {
+        Article article = articleCreateRequestMapper.articleRequestToModel(articleRequest);
         article.setAuthor(author);
         Long articleId = articleService.saveNewArticle(article).getId();
         ArticleCreateResponse body = new ArticleCreateResponse().setArticleId(String.valueOf(articleId));
