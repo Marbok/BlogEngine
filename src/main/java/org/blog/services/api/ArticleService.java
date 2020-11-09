@@ -1,5 +1,7 @@
 package org.blog.services.api;
 
+import org.blog.exceptions.ArticleExistsException;
+import org.blog.exceptions.ForbiddenException;
 import org.blog.model.Article;
 import org.blog.model.Author;
 
@@ -27,7 +29,17 @@ public interface ArticleService {
      * Add new article
      *
      * @param article article
-     * @return  saved article
+     * @return saved article
+     * @throws ArticleExistsException when article exists
      */
-    Article saveNewArticle(Article article);
+    Article saveNewArticle(Article article) throws ArticleExistsException;
+
+    /**
+     * delete article, if article doesn't exist, do nothing
+     * Only author and moderator can delete article
+     *
+     * @param articleId article id
+     * @param author    author, which want delete article
+     */
+    void deleteById(Long articleId, Author author) throws ForbiddenException;
 }

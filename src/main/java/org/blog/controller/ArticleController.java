@@ -8,11 +8,12 @@ import org.blog.controller.dto.article.ArticleResponse;
 import org.blog.controller.dto.article.ArticlesResponse;
 import org.blog.controller.mapper.ArticleCreateRequestMapper;
 import org.blog.controller.mapper.ArticleMapper;
+import org.blog.exceptions.ArticleExistsException;
+import org.blog.exceptions.ForbiddenException;
 import org.blog.exceptions.NotFoundException;
 import org.blog.model.Article;
 import org.blog.model.Author;
 import org.blog.services.api.ArticleService;
-import org.blog.services.api.TopicService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -50,11 +51,19 @@ public class ArticleController {
 
     @PostMapping("/article/create")
     public ResponseEntity<ArticleCreateResponse> createNewArticle(@RequestBody ArticleCreateRequest articleRequest,
-                                                                  @CurrentAuthor Author author) {
+                                                                  @CurrentAuthor Author author)
+            throws ArticleExistsException {
         Article article = articleCreateRequestMapper.articleRequestToModel(articleRequest);
         article.setAuthor(author);
         Long articleId = articleService.saveNewArticle(article).getId();
         ArticleCreateResponse body = new ArticleCreateResponse().setArticleId(String.valueOf(articleId));
         return new ResponseEntity<>(body, HttpStatus.CREATED);
+    }
+
+    @DeleteMapping("/article/{articleId}")
+    public HttpStatus deleteArticle(@PathVariable Long articleId,
+                                    @CurrentAuthor Author author) throws ForbiddenException {
+        articleService.deleteById(articleId, author);
+        return HttpStatus.OK;
     }
 }

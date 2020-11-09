@@ -11,8 +11,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static org.blog.util.AuthUtils.getToken;
 import static org.hamcrest.Matchers.containsString;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -76,6 +75,38 @@ public class ArticleTest {
                 .andDo(print())
                 .andExpect(status().isCreated())
                 .andExpect(content().string(containsString("{\"articleId\":\"4\"}")));
+    }
+
+    @Test
+    public void deleteArticle() throws Exception {
+        String token = getToken(mockMvc, "marbok", "test");
+
+        mockMvc.perform(get("/article/1"))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        mockMvc.perform(delete("/article/1")
+                .header(JwtFilter.AUTHORIZATION, "Bearer " + token))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        mockMvc.perform(get("/article/1"))
+                .andDo(print())
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void deleteArticle_anotherUser() throws Exception {
+        String token = getToken(mockMvc, "sun micro", "test");
+
+        mockMvc.perform(get("/article/1"))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        mockMvc.perform(delete("/article/1")
+                .header(JwtFilter.AUTHORIZATION, "Bearer " + token))
+                .andDo(print())
+                .andExpect(status().isForbidden());
     }
 
 }

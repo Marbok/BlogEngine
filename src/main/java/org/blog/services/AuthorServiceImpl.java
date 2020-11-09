@@ -3,6 +3,7 @@ package org.blog.services;
 import org.blog.exceptions.IncorrectNicknameException;
 import org.blog.model.Author;
 import org.blog.model.AuthorDetails;
+import org.blog.model.Role;
 import org.blog.repository.AuthorRepository;
 import org.blog.services.api.AuthorService;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -14,6 +15,8 @@ import org.springframework.stereotype.Component;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+
+import static org.blog.model.Role.USER;
 
 @Component
 public class AuthorServiceImpl implements AuthorService {
@@ -30,7 +33,7 @@ public class AuthorServiceImpl implements AuthorService {
     public UserDetails loadUserByUsername(String nickname) throws UsernameNotFoundException {
         Author author = authorRepository.findByNickname(nickname)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-        List<SimpleGrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority("USER"));
+        List<SimpleGrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority(author.getRole().name()));
 
         return new AuthorDetails(author, authorities);
     }
@@ -54,6 +57,7 @@ public class AuthorServiceImpl implements AuthorService {
         }
         String encodePassword = passwordEncoder.encode(author.getPassword());
         author.setPassword(encodePassword);
+        author.setRole(USER);
         return authorRepository.save(author);
     }
 }

@@ -14,7 +14,7 @@ public class RestExceptionHandler {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(UsernameNotFoundException.class)
+    @ExceptionHandler({UsernameNotFoundException.class, ForbiddenException.class})
     public ResponseEntity<HttpStatus> handleUserNameNotFoundException() {
         return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
