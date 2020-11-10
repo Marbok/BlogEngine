@@ -1,6 +1,7 @@
 package org.blog.controller.dto.article;
 
 import lombok.Data;
+import org.blog.controller.dto.topic.TopicsResponse;
 
 import java.io.Serializable;
 
@@ -11,4 +12,5 @@ public class ArticleResponse implements Serializable {
     private String title;
     private String description;
     private String content;
+    private TopicsResponse topic;
 }

@@ -39,7 +39,18 @@ public interface ArticleService {
      * Only author and moderator can delete article
      *
      * @param articleId article id
-     * @param author    author, which want delete article
+     * @param author    author, which wants delete article
+     * @throws ForbiddenException if author can't delete article
      */
     void deleteById(Long articleId, Author author) throws ForbiddenException;
+
+    /**
+     * update article, if article doesn't exist, do nothing
+     * Only author and moderator can delete article
+     *
+     * @param article article
+     * @param author  author, which wants update article
+     * @throws ForbiddenException if author can't update article
+     */
+    void updateArticle(Article article, Author author) throws ForbiddenException;
 }

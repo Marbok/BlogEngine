@@ -59,4 +59,21 @@ public class ArticleServiceImpl implements ArticleService {
         }
     }
 
+    @Override
+    public void updateArticle(Article article, Author author) throws ForbiddenException {
+        Optional<Article> articleOpt = articleRepository.findById(article.getId());
+        if (articleOpt.isPresent()) {
+            Article articleBD = articleOpt.get();
+            if (articleBD.getAuthor().equals(author)) {
+                article.setAuthor(author);
+                articleRepository.save(article);
+            } else if (author.getRole().equals(MODERATOR)) {
+                article.setAuthor(articleBD.getAuthor());
+                articleRepository.save(article);
+            } else {
+                throw new ForbiddenException();
+            }
+        }
+    }
+
 }

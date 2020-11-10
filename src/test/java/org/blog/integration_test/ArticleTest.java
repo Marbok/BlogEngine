@@ -1,6 +1,8 @@
 package org.blog.integration_test;
 
 import org.blog.config.jwt.JwtFilter;
+import org.blog.controller.dto.article.ArticleCreateRequest;
+import org.blog.controller.dto.article.ArticleResponse;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -10,6 +12,8 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.blog.util.AuthUtils.getToken;
+import static org.blog.util.SerializationUtil.deserialize;
+import static org.blog.util.SerializationUtil.serialize;
 import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -24,21 +28,6 @@ public class ArticleTest {
 
     @Autowired
     private MockMvc mockMvc;
-
-    @Test
-    public void getArticles_fail() throws Exception {
-        mockMvc.perform(get("/articles/10"))
-                .andDo(print())
-                .andExpect(status().isNotFound());
-    }
-
-    @Test
-    public void getArticles() throws Exception {
-        mockMvc.perform(get("/articles/1"))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(content().string(containsString("[{\"id\":1,\"title\":\"java\"},{\"id\":2,\"title\":\"java sun\"}]")));
-    }
 
     @Test
     public void getArticle() throws Exception {
@@ -107,6 +96,40 @@ public class ArticleTest {
                 .header(JwtFilter.AUTHORIZATION, "Bearer " + token))
                 .andDo(print())
                 .andExpect(status().isForbidden());
+    }
+
+    @Test
+    public void updateArticle() throws Exception {
+        String token = getToken(mockMvc, "marbok", "test");
+
+        String articleResponseJson = mockMvc.perform(get("/article/1"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("\"title\":\"java\"")))
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+
+        ArticleResponse articleResponse = deserialize(articleResponseJson, ArticleResponse.class);
+
+        ArticleCreateRequest articleRequest = new ArticleCreateRequest()
+                .setTitle("new java")
+                .setContent(articleResponse.getContent())
+                .setDescription(articleResponse.getDescription())
+                .setTopicId(articleResponse.getTopic().getId());
+
+        mockMvc.perform(put("/article/1")
+                .header(JwtFilter.AUTHORIZATION, "Bearer " + token)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(serialize(articleRequest)))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        mockMvc.perform(get("/article/1"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("\"title\":\"new java\"")));
+
     }
 
 }
