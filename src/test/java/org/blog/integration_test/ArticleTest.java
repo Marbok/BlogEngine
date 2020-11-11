@@ -34,7 +34,7 @@ public class ArticleTest {
         mockMvc.perform(get("/article/1"))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(content().string(containsString("{\"author\":\"marbok\",\"title\":\"java\",\"description\":\"java art\",\"content\":\"content article java\"}")));
+                .andExpect(content().string(containsString("{\"author\":\"marbok\",\"title\":\"java\",\"description\":\"java art\",\"content\":\"content article java\",\"topic\":{\"id\":1,\"name\":\"java\"}}")));
     }
 
     @Test
@@ -130,6 +130,34 @@ public class ArticleTest {
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("\"title\":\"new java\"")));
 
+    }
+
+    @Test
+    public void updateArticle_anotherUser() throws Exception {
+        String token = getToken(mockMvc, "sun micro", "test");
+
+        String articleResponseJson = mockMvc.perform(get("/article/1"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("\"title\":\"java\"")))
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+
+        ArticleResponse articleResponse = deserialize(articleResponseJson, ArticleResponse.class);
+
+        ArticleCreateRequest articleRequest = new ArticleCreateRequest()
+                .setTitle("new java")
+                .setContent(articleResponse.getContent())
+                .setDescription(articleResponse.getDescription())
+                .setTopicId(articleResponse.getTopic().getId());
+
+        mockMvc.perform(put("/article/1")
+                .header(JwtFilter.AUTHORIZATION, "Bearer " + token)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(serialize(articleRequest)))
+                .andDo(print())
+                .andExpect(status().isForbidden());
     }
 
 }
