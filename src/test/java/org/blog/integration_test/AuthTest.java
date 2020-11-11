@@ -13,9 +13,11 @@ import org.springframework.test.web.servlet.MockMvc;
 import static org.blog.config.jwt.JwtFilter.AUTHORIZATION;
 import static org.blog.util.SerializationUtil.deserialize;
 import static org.blog.util.SerializationUtil.serialize;
+import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -36,6 +38,7 @@ public class AuthTest {
                         .setPassword("12345"))))
                 .andDo(print())
                 .andExpect(status().isOk())
+                .andExpect(content().string(containsString("\"role\":\"USER\"")))
                 .andReturn()
                 .getResponse()
                 .getContentAsString();
@@ -74,6 +77,7 @@ public class AuthTest {
                         .setPassword("test"))))
                 .andDo(print())
                 .andExpect(status().isOk())
+                .andExpect(content().string(containsString("\"role\":\"USER\"")))
                 .andReturn()
                 .getResponse()
                 .getContentAsString();

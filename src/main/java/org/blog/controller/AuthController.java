@@ -29,9 +29,9 @@ public class AuthController {
     @PostMapping("/token")
     public TokenResponse token(@RequestBody Author authorData) {
         return authorService.findByNicknameAndPassword(authorData.getNickname(), authorData.getPassword())
-                .map(author -> jwtProvider.generateToken(author.getNickname()))
-                .map(token -> new TokenResponse()
-                        .setToken(token))
+                .map(author -> new TokenResponse()
+                        .setToken(jwtProvider.generateToken(author.getNickname()))
+                        .setRole(author.getRole()))
                 .orElseThrow(() -> new UsernameNotFoundException("user " + authorData.getNickname() + " not founded"));
     }
 
@@ -40,7 +40,8 @@ public class AuthController {
         Author saveAuthor = authorService.addNewAuthor(author);
         String token = jwtProvider.generateToken(saveAuthor.getNickname());
         return new TokenResponse()
-                .setToken(token);
+                .setToken(token)
+                .setRole(saveAuthor.getRole());
 
     }
 
