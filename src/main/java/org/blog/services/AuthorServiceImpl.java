@@ -3,7 +3,6 @@ package org.blog.services;
 import org.blog.exceptions.IncorrectNicknameException;
 import org.blog.model.Author;
 import org.blog.model.AuthorDetails;
-import org.blog.model.Role;
 import org.blog.repository.AuthorRepository;
 import org.blog.services.api.AuthorService;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -17,6 +16,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.blog.model.Role.USER;
+import static org.springframework.util.StringUtils.isEmpty;
 
 @Component
 public class AuthorServiceImpl implements AuthorService {
@@ -51,6 +51,10 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Override
     public Author addNewAuthor(Author author) throws IncorrectNicknameException {
+        if (isEmpty(author.getNickname()) || isEmpty(author.getPassword())) {
+            throw new IncorrectNicknameException();
+        }
+
         Optional<Author> byNickname = authorRepository.findByNickname(author.getNickname());
         if (byNickname.isPresent()) {
             throw new IncorrectNicknameException();
