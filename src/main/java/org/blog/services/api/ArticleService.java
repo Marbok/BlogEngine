@@ -11,13 +11,30 @@ import java.util.Optional;
 public interface ArticleService {
 
     /**
-     * Find articles name by topic id,
+     * Find articles by topic and nickname
+     *
+     * @param topicId  topic id
+     * @param nickname author nickname
+     * @return List of articles
+     */
+    Collection<Article> findArticlesByTopicAndNickname(Long topicId, String nickname);
+
+    /**
+     * Find article by nickname
+     *
+     * @param nickname author nickname
+     * @return List of articles
+     */
+    Collection<Article> findArticleByNickname(String nickname);
+
+    /**
+     * Find articles by topic id,
      * if articles not founded, method return empty Collection
      *
      * @param topicId topic id
-     * @return List of article
+     * @return List of articles
      */
-    Collection<Article> findArticlesByTopic(Long topicId);
+    Collection<Article> findArticlesByTopicId(Long topicId);
 
     /**
      * @param articleId article id

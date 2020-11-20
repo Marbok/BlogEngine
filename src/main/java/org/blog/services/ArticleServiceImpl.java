@@ -5,7 +5,10 @@ import org.blog.exceptions.ArticleExistsException;
 import org.blog.exceptions.ForbiddenException;
 import org.blog.model.Article;
 import org.blog.model.Author;
+import org.blog.model.Topic;
 import org.blog.repository.ArticleRepository;
+import org.blog.repository.AuthorRepository;
+import org.blog.repository.TopicRepository;
 import org.blog.services.api.ArticleService;
 import org.springframework.stereotype.Component;
 
@@ -20,13 +23,37 @@ import static org.blog.model.Role.MODERATOR;
 public class ArticleServiceImpl implements ArticleService {
 
     private final ArticleRepository articleRepository;
+    private final TopicRepository topicRepository;
+    private final AuthorRepository authorRepository;
 
     @Override
-    public Collection<Article> findArticlesByTopic(Long topicId) {
-        if (topicId == null) {
-            return Collections.emptyList();
+    public Collection<Article> findArticlesByTopicAndNickname(Long topicId, String nickname) {
+        if (topicId == null && nickname == null) throw new IllegalArgumentException();
+        if (topicId == null) return findArticleByNickname(nickname);
+        if (nickname == null) return findArticlesByTopicId(topicId);
+
+        Optional<Topic> topic = topicRepository.findById(topicId);
+        Optional<Author> author = authorRepository.findByNickname(nickname);
+        if (topic.isPresent() && author.isPresent()) {
+            return articleRepository.findByTopicAndAuthor(topic.get(), author.get());
         }
-        return articleRepository.findAllByTopic_id(topicId);
+        return Collections.emptyList();
+    }
+
+    @Override
+    public Collection<Article> findArticleByNickname(String nickname) {
+        if (nickname == null) return Collections.emptyList();
+        return authorRepository.findByNickname(nickname)
+                .map(articleRepository::findAllByAuthor)
+                .orElse(Collections.emptyList());
+    }
+
+    @Override
+    public Collection<Article> findArticlesByTopicId(Long topicId) {
+        if (topicId == null) return Collections.emptyList();
+        return topicRepository.findById(topicId)
+                .map(articleRepository::findAllByTopic)
+                .orElse(Collections.emptyList());
     }
 
     @Override

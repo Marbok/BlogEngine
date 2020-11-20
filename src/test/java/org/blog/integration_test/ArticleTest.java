@@ -63,7 +63,7 @@ public class ArticleTest {
                 .header(JwtFilter.AUTHORIZATION, "Bearer " + token))
                 .andDo(print())
                 .andExpect(status().isCreated())
-                .andExpect(content().string(containsString("{\"articleId\":\"4\"}")));
+                .andExpect(content().string(containsString("{\"articleId\":\"5\"}")));
     }
 
     @Test

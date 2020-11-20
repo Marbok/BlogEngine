@@ -11,4 +11,5 @@ insert into TOPIC(topic_id, name) values
 insert into ARTICLE(article_id, topic_id, title, description, content, nickname) values
 (1, 1, 'java', 'java art', 'content article java', 'marbok'),
 (2, 1, 'java sun', 'java sun art', 'content article java sun', 'sun micro'),
-(3, 2, 'python', 'python art', 'content article python', 'Till Linderman');
+(3, 2, 'python', 'python art', 'content article python', 'Till Linderman'),
+(4, 2, 'python is cool', 'python marbok', 'my cool article', 'marbok');

@@ -24,16 +24,37 @@ public class ArticlesTest {
 
     @Test
     public void getArticles_fail() throws Exception {
-        mockMvc.perform(get("/articles/10"))
+        mockMvc.perform(get("/articles")
+                .param("topicId", "10"))
                 .andDo(print())
                 .andExpect(status().isNotFound());
     }
 
     @Test
-    public void getArticles() throws Exception {
-        mockMvc.perform(get("/articles/1"))
+    public void getArticles_filterByTopic() throws Exception {
+        mockMvc.perform(get("/articles")
+                .param("topicId", "1"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("[{\"id\":1,\"title\":\"java\"},{\"id\":2,\"title\":\"java sun\"}]")));
+    }
+
+    @Test
+    public void getArticles_filterByNickname() throws Exception {
+        mockMvc.perform(get("/articles")
+                .param("nickname", "marbok"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("[{\"id\":1,\"title\":\"java\"},{\"id\":4,\"title\":\"python is cool\"}]")));
+    }
+
+    @Test
+    public void getArticles_filterByTopicIdAndNickname() throws Exception {
+        mockMvc.perform(get("/articles")
+                .param("topicId", "2")
+                .param("nickname", "marbok"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("[{\"id\":4,\"title\":\"python is cool\"}]")));
     }
 }
