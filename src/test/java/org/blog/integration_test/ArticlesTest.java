@@ -36,7 +36,7 @@ public class ArticlesTest {
                 .param("topicId", "1"))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(content().string(containsString("[{\"id\":1,\"title\":\"java\"},{\"id\":2,\"title\":\"java sun\"}]")));
+                .andExpect(content().string(containsString("[{\"id\":1,\"title\":\"java\",\"topic\":{\"id\":1,\"name\":\"java\"}},{\"id\":2,\"title\":\"java sun\",\"topic\":{\"id\":1,\"name\":\"java\"}}]")));
     }
 
     @Test
@@ -45,7 +45,7 @@ public class ArticlesTest {
                 .param("nickname", "marbok"))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(content().string(containsString("[{\"id\":1,\"title\":\"java\"},{\"id\":4,\"title\":\"python is cool\"}]")));
+                .andExpect(content().string(containsString("[{\"id\":1,\"title\":\"java\",\"topic\":{\"id\":1,\"name\":\"java\"}},{\"id\":4,\"title\":\"python is cool\",\"topic\":{\"id\":2,\"name\":\"python\"}}]")));
     }
 
     @Test
