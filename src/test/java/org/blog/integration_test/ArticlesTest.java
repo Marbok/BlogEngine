@@ -36,7 +36,7 @@ public class ArticlesTest {
                 .param("topicId", "1"))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(content().string(containsString("[{\"id\":1,\"title\":\"java\",\"topic\":{\"id\":1,\"name\":\"java\"}},{\"id\":2,\"title\":\"java sun\",\"topic\":{\"id\":1,\"name\":\"java\"}}]")));
+                .andExpect(content().string(containsString("[{\"id\":1,\"title\":\"java\",\"description\":\"java art\",\"topic\":{\"id\":1,\"name\":\"java\"}},{\"id\":2,\"title\":\"java sun\",\"description\":\"java sun art\",\"topic\":{\"id\":1,\"name\":\"java\"}}]")));
     }
 
     @Test
@@ -45,7 +45,7 @@ public class ArticlesTest {
                 .param("nickname", "marbok"))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(content().string(containsString("[{\"id\":1,\"title\":\"java\",\"topic\":{\"id\":1,\"name\":\"java\"}},{\"id\":4,\"title\":\"python is cool\",\"topic\":{\"id\":2,\"name\":\"python\"}}]")));
+                .andExpect(content().string(containsString("[{\"id\":1,\"title\":\"java\",\"description\":\"java art\",\"topic\":{\"id\":1,\"name\":\"java\"}},{\"id\":4,\"title\":\"python is cool\",\"description\":\"python marbok\",\"topic\":{\"id\":2,\"name\":\"python\"}}]")));
     }
 
     @Test
@@ -55,6 +55,14 @@ public class ArticlesTest {
                 .param("nickname", "marbok"))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(content().string(containsString("[{\"id\":4,\"title\":\"python is cool\"}]")));
+                .andExpect(content().string(containsString("[{\"id\":4,\"title\":\"python is cool\",\"description\":\"python marbok\",\"topic\":{\"id\":2,\"name\":\"python\"}}]")));
+    }
+
+    @Test
+    public void getArticles_withoutFilters() throws Exception {
+        mockMvc.perform(get("/articles"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("[{\"id\":4,\"title\":\"python is cool\",\"description\":\"python marbok\",\"topic\":{\"id\":2,\"name\":\"python\"}},{\"id\":3,\"title\":\"python\",\"description\":\"python art\",\"topic\":{\"id\":2,\"name\":\"python\"}},{\"id\":2,\"title\":\"java sun\",\"description\":\"java sun art\",\"topic\":{\"id\":1,\"name\":\"java\"}},{\"id\":1,\"title\":\"java\",\"description\":\"java art\",\"topic\":{\"id\":1,\"name\":\"java\"}}]")));
     }
 }

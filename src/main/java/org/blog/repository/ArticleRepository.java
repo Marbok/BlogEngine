@@ -16,4 +16,6 @@ public interface ArticleRepository extends CrudRepository<Article, Long> {
     List<Article> findAllByAuthor(Author author);
 
     List<Article> findAllByTopic(Topic topic);
+
+    List<Article> findFirst9ByOrderByIdDesc();
 }

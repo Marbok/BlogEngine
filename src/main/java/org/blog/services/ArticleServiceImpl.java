@@ -28,7 +28,9 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     public Collection<Article> findArticlesByTopicAndNickname(Long topicId, String nickname) {
-        if (topicId == null && nickname == null) throw new IllegalArgumentException();
+        if (topicId == null && nickname == null) {
+            return articleRepository.findFirst9ByOrderByIdDesc();
+        }
         if (topicId == null) return findArticleByNickname(nickname);
         if (nickname == null) return findArticlesByTopicId(topicId);
 

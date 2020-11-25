@@ -3,6 +3,7 @@ package org.blog.model;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Data
 @Entity
@@ -26,4 +27,6 @@ public class Article {
     @ManyToOne
     @JoinColumn(name = "nickname")
     private Author author;
+
+    private LocalDateTime date;
 }
