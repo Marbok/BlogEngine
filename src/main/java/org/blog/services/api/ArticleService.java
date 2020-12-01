@@ -6,35 +6,20 @@ import org.blog.model.Article;
 import org.blog.model.Author;
 
 import java.util.Collection;
+import java.util.Map;
 import java.util.Optional;
 
 public interface ArticleService {
 
     /**
-     * Find articles by topic and nickname
+     * Find article by input params
      *
-     * @param topicId  topic id
-     * @param nickname author nickname
-     * @return List of articles
+     * @param limit  counts of articles in page
+     * @param page   num of page
+     * @param params params for search
+     * @return list of article
      */
-    Collection<Article> findArticlesByTopicAndNickname(Long topicId, String nickname);
-
-    /**
-     * Find article by nickname
-     *
-     * @param nickname author nickname
-     * @return List of articles
-     */
-    Collection<Article> findArticleByNickname(String nickname);
-
-    /**
-     * Find articles by topic id,
-     * if articles not founded, method return empty Collection
-     *
-     * @param topicId topic id
-     * @return List of articles
-     */
-    Collection<Article> findArticlesByTopicId(Long topicId);
+    Collection<Article> findArticles(int limit, int page, Map<String, Object> params);
 
     /**
      * @param articleId article id

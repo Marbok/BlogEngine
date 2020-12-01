@@ -1,61 +1,62 @@
 package org.blog.services;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
 import lombok.AllArgsConstructor;
 import org.blog.exceptions.ArticleExistsException;
 import org.blog.exceptions.ForbiddenException;
 import org.blog.model.Article;
 import org.blog.model.Author;
-import org.blog.model.Topic;
 import org.blog.repository.ArticleRepository;
-import org.blog.repository.AuthorRepository;
-import org.blog.repository.TopicRepository;
 import org.blog.services.api.ArticleService;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
-
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Optional;
+import org.springframework.util.StringUtils;
 
 import static org.blog.model.Role.MODERATOR;
+import static org.blog.repository.specifications.ArticleSpecifications.articlesHasNickname;
+import static org.blog.repository.specifications.ArticleSpecifications.articlesHasTopicId;
 
 @Component
 @AllArgsConstructor
 public class ArticleServiceImpl implements ArticleService {
 
     private final ArticleRepository articleRepository;
-    private final TopicRepository topicRepository;
-    private final AuthorRepository authorRepository;
 
     @Override
-    public Collection<Article> findArticlesByTopicAndNickname(Long topicId, String nickname) {
-        if (topicId == null && nickname == null) {
-            return articleRepository.findFirst9ByOrderByIdDesc();
+    public Collection<Article> findArticles(int limit, int page, Map<String, Object> params) {
+        PageRequest pageable = PageRequest.of(page, limit, Sort.by("id").descending());
+        Long topicId = (Long) params.get("topicId");
+        String nickname = (String) params.get("nickname");
+        List<Specification<Article>> specs = new ArrayList<>();
+        if (topicId != null) {
+            specs.add(articlesHasTopicId(topicId));
         }
-        if (topicId == null) return findArticleByNickname(nickname);
-        if (nickname == null) return findArticlesByTopicId(topicId);
-
-        Optional<Topic> topic = topicRepository.findById(topicId);
-        Optional<Author> author = authorRepository.findByNickname(nickname);
-        if (topic.isPresent() && author.isPresent()) {
-            return articleRepository.findByTopicAndAuthor(topic.get(), author.get());
+        if (!StringUtils.isEmpty(nickname)) {
+            specs.add(articlesHasNickname(nickname));
         }
-        return Collections.emptyList();
-    }
 
-    @Override
-    public Collection<Article> findArticleByNickname(String nickname) {
-        if (nickname == null) return Collections.emptyList();
-        return authorRepository.findByNickname(nickname)
-                .map(articleRepository::findAllByAuthor)
+        if (specs.isEmpty()) {
+            return toList(articleRepository.findAll(null, pageable));
+        }
+
+        return specs.stream()
+                .reduce(Specification::and)
+                .map(spec -> articleRepository.findAll(spec, pageable).getContent())
                 .orElse(Collections.emptyList());
     }
 
-    @Override
-    public Collection<Article> findArticlesByTopicId(Long topicId) {
-        if (topicId == null) return Collections.emptyList();
-        return topicRepository.findById(topicId)
-                .map(articleRepository::findAllByTopic)
-                .orElse(Collections.emptyList());
+    private List<Article> toList(Iterable<Article> iter) {
+        List<Article> list = new ArrayList<>();
+        iter.forEach(list::add);
+        return list;
     }
 
     @Override

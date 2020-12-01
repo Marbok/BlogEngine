@@ -27,6 +27,4 @@ public class Article {
     @ManyToOne
     @JoinColumn(name = "nickname")
     private Author author;
-
-    private LocalDateTime date;
 }

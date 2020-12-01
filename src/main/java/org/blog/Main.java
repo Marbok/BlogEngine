@@ -20,7 +20,7 @@ public class Main {
         SpringApplication.run(Main.class, args);
     }
 
-    //@Bean
+//    @Bean
     public CommandLineRunner initDataBase(ArticleRepository articleRepository,
                                           TopicRepository topicRepository,
                                           AuthorRepository authorRepository) {
